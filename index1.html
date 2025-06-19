@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrition Navigator - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
+            background-image: url('photo4.jpg');
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #4b6cb7;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 2px rgba(75, 108, 183, 0.2);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .requirement::before {
+            content: "•";
+            margin-right: 5px;
+        }
+
+        .requirement.valid {
+            color: #2ecc71;
+        }
+
+        .requirement.valid::before {
+            content: "✓";
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4b6cb7;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3a56a0;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .signup-link a {
+            color: #4b6cb7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #4b6cb7;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        a{
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Nutrition Navigator</h1>
+            <p>Track your nutrition journey with ease</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required>
+                <div class="error-message" id="usernameError">Please enter a valid username or email</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error-message" id="passwordError">Please enter your password</div>
+            </div>
+
+            <button type="submit" id="loginBtn" disabled>Login</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="#" id="showSignup">Sign up</a>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+
+            <div class="success-message" id="signupSuccess">
+                Account created successfully! You can now login.
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="newUsername">Username</label>
+                    <input type="text" id="newUsername" name="newUsername" required>
+                    <div class="error-message" id="newUsernameError">Username must be at least 4 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="newEmail">Email</label>
+                    <input type="email" id="newEmail" name="newEmail" required>
+                    <div class="error-message" id="newEmailError">Please enter a valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Password</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                    <div class="error-message" id="newPasswordError">Password must meet all requirements</div>
+                    <div class="password-requirements" id="passwordRequirements">
+                        <div class="requirement" id="lengthReq">Minimum 8 characters</div>
+                        <div class="requirement" id="upperReq">At least one uppercase letter (A-Z)</div>
+                        <div class="requirement" id="lowerReq">At least one lowercase letter (a-z)</div>
+                        <div class="requirement" id="numberReq">At least one number (0-9)</div>
+                        <div class="requirement" id="specialReq">At least one special character (!@#$%^&*)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                </div>
+
+                <button type="submit" id="signupBtn" disabled>Signup</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Simulated user database
+        const userDatabase = [
+            { username: 'user1', email: 'user1@example.com', password: 'Password123!' },
+            { username: 'user2', email: 'user2@example.com', password: 'Password123!' }
+        ];
+
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const showSignupBtn = document.getElementById('showSignup');
+        const signupModal = document.getElementById('signupModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const signupSuccess = document.getElementById('signupSuccess');
+        const signupBtn = document.getElementById('signupBtn');
+        const newPasswordInput = document.getElementById('newPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+
+        // Password requirements elements
+        const lengthReq = document.getElementById('lengthReq');
+        const upperReq = document.getElementById('upperReq');
+        const lowerReq = document.getElementById('lowerReq');
+        const numberReq = document.getElementById('numberReq');
+        const specialReq = document.getElementById('specialReq');
+
+        // Form validation for login
+        function validateLoginForm() {
+            const usernameValid = usernameInput.value.trim() !== '';
+            const passwordValid = passwordInput.value.trim() !== '';
+            
+            loginBtn.disabled = !(usernameValid && passwordValid);
+        }
+
+        // Check password strength
+        function checkPasswordStrength(password) {
+            // Check length
+            const hasLength = password.length >= 8;
+            lengthReq.classList.toggle('valid', hasLength);
+            
+            // Check uppercase
+            const hasUpper = /[A-Z]/.test(password);
+            upperReq.classList.toggle('valid', hasUpper);
+            
+            // Check lowercase
+            const hasLower = /[a-z]/.test(password);
+            lowerReq.classList.toggle('valid', hasLower);
+            
+            // Check number
+            const hasNumber = /[0-9]/.test(password);
+            numberReq.classList.toggle('valid', hasNumber);
+            
+            // Check special character
+            const hasSpecial = /[!@#$%^&*]/.test(password);
+            specialReq.classList.toggle('valid', hasSpecial);
+            
+            return hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
+        }
+
+        // Form validation for signup
+        function validateSignupForm() {
+            const newUsername = document.getElementById('newUsername').value.trim();
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            
+            // Validate username
+            const usernameValid = newUsername.length >= 4;
+            document.getElementById('newUsernameError').style.display = usernameValid ? 'none' : 'block';
+            
+            // Validate email
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
+            document.getElementById('newEmailError').style.display = emailValid ? 'none' : 'block';
+            
+            // Validate password
+            const passwordValid = checkPasswordStrength(newPassword);
+            document.getElementById('newPasswordError').style.display = passwordValid ? 'none' : 'block';
+            
+            // Validate password match
+            const passwordsMatch = newPassword === confirmPassword && newPassword !== '';
+            document.getElementById('confirmPasswordError').style.display = passwordsMatch ? 'none' : 'block';
+            
+            // Enable/disable signup button
+            signupBtn.disabled = !(usernameValid && emailValid && passwordValid && passwordsMatch);
+            
+            return usernameValid && emailValid && passwordValid && passwordsMatch;
+        }
+
+        // Event Listeners
+        usernameInput.addEventListener('input', validateLoginForm);
+        passwordInput.addEventListener('input', validateLoginForm);
+
+        showSignupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupModal.style.display = 'flex';
+            signupSuccess.style.display = 'none';
+            signupForm.reset();
+            signupBtn.disabled = true;
+            // Reset password requirements display
+            [lengthReq, upperReq, lowerReq, numberReq, specialReq].forEach(el => {
+                el.classList.remove('valid');
+            });
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            signupModal.style.display = 'none';
+        });
+
+        // Password input event listeners for real-time validation
+        newPasswordInput.addEventListener('input', () => {
+            validateSignupForm();
+        });
+
+        confirmPasswordInput.addEventListener('input', () => {
+            validateSignupForm();
+        });
+
+        document.getElementById('newUsername').addEventListener('input', validateSignupForm);
+        document.getElementById('newEmail').addEventListener('input', validateSignupForm);
+
+        // Login form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Check if user exists
+            const user = userDatabase.find(u => 
+                (u.username === username || u.email === username) && u.password === password
+            );
+            
+            if (user) {
+                // Successful login
+                
+                alert('Login successful! Redirecting to dashboard...');
+                window.location.href="healthy-tips.html";
+                
+                // In a real app, you would redirect to the dashboard page
+                // window.location.href = 'dashboard.html';
+            } else {
+                // Failed login
+                document.getElementById('usernameError').textContent = 'Invalid username or email';
+                document.getElementById('usernameError').style.display = 'block';
+                document.getElementById('passwordError').textContent = 'Invalid password';
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        });
+
+        // Signup form submission
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (validateSignupForm()) {
+                const newUsername = document.getElementById('newUsername').value.trim();
+                const newEmail = document.getElementById('newEmail').value.trim();
+                const newPassword = document.getElementById('newPassword').value.trim();
+                
+                // Check if username or email already exists
+                const usernameExists = userDatabase.some(u => u.username === newUsername);
+                const emailExists = userDatabase.some(u => u.email === newEmail);
+                
+                if (usernameExists) {
+                    document.getElementById('newUsernameError').textContent = 'Username already taken';
+                    document.getElementById('newUsernameError').style.display = 'block';
+                    return;
+                }
+                
+                if (emailExists) {
+                    document.getElementById('newEmailError').textContent = 'Email already registered';
+                    document.getElementById('newEmailError').style.display = 'block';
+                    return;
+                }
+                
+                // Add new user to database
+                userDatabase.push({
+                    username: newUsername,
+                    email: newEmail,
+                    password: newPassword
+                });
+                
+                // Show success message
+                signupSuccess.style.display = 'block';
+                
+                // Reset form
+                signupForm.reset();
+                signupBtn.disabled = true;
+                
+                // Close modal after 2 seconds
+                setTimeout(() => {
+                    signupModal.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === signupModal) {
+                signupModal.style.display = 'none';
+            }
+        });
+
+       
+    </script>
+</body>
+</html>
